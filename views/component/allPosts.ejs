@@ -1,0 +1,48 @@
+<% if(locals.message.success){ %>
+    <div class="alert alert-success" role="alert"><%= message.success %> </div>
+    <% } %>
+ <div class="row">
+     <% if(posts.length > 0) { %>
+        <% posts.forEach((post) => {  %>                    
+        <div class="col-md-4" style="border-bottom: 2px solid green;">
+           <img src="/assets/img/<%= post.image %>" alt="" width="100%" height="300px">
+           <h3><a href="/details/<%= post._id %>"><%= post.title.slice(0,50) %></a></h3>
+           <p style="text-align: justify;"><%= post.body.slice(0,240) %></p>
+           <p><span><%= post.userName %></span>  <span style="float: right;"><%= format(post.updatedAt, "d,mmmm,yyyy") %></span></p>
+        </div>
+        <% }) %>                    
+        <% } else {%>
+               <div>No Record found.</div>
+            <% }%>
+
+</div>
+ <%
+     let totalPages = Math.ceil(count/perPage);
+     let startLoop = currentPage;
+     let diff = totalPages - currentPage;  
+      if(diff <= 4){
+        startLoop =  totalPages  - 4
+      }
+      let endLoop = parseInt(startLoop) + 4;
+       if(startLoop <= 0){
+           startLoop = 1;
+       } 
+ %>
+
+  <% if(count > 2 && posts.length !== 0) { %>
+      
+    <nav aria-label="Page navigation example" class="mt-4">
+        <ul class="pagination">
+            <% if(currentPage > 1) {%>
+                <li class="page-item"><a class="page-link" href="/posts/<%= currentPage - 1%>">Previous</a></li>
+            <% } %>
+            <% for(let i = startLoop; i <= endLoop; i++) {  const active = i == currentPage ? 'active' : ''  %>
+          <li class="page-item <%= active %>"><a class="page-link" href="/posts/<%= i %>"><%= i %></a></li>
+            <% } %>
+           <% if(currentPage <  totalPages){ %>
+          <li class="page-item"><a class="page-link" href="/posts/<%= parseInt(currentPage) + 1%>">Next</a></li>
+           <% } %>
+        </ul>
+      </nav>
+
+    <% } %>
